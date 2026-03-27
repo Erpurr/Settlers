@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://cxs8vk71h5okf"]
+
+[ext_resource type="Script" uid="uid://uj6xf3xnwt6f" path="res://scripts/camera.gd" id="1_elqb8"]
+[ext_resource type="Script" uid="uid://c6dfxeql122p3" path="res://scripts/BuildingPlacer.gd" id="2_rvslj"]
+[ext_resource type="PackedScene" uid="uid://eedvdhb8ruco" path="res://scenes/buildings/house.tscn" id="3_0bbpv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7dm0k"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0bbpv"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
+material = SubResource("StandardMaterial3D_0bbpv")
+size = Vector3(40, 2, 40)
+
+[sub_resource type="GDScript" id="GDScript_0bbpv"]
+script/source = "extends Button
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[node name="Main" type="Node"]
+
+[node name="Ground" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("BoxShape3D_7dm0k")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("BoxMesh_ig7tw")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.991241, -0.132066, -1.35019e-07, 0.083741, -0.628529, 0.773265, -0.102122, 0.766492, 0.634083, 6.78881, 9.74541, 22.8176)
+shadow_enabled = true
+
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource("1_elqb8")
+
+[node name="Elevation" type="Node3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18.2848, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/Elevation"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 15, 10)
+
+[node name="BuildingPlacer" type="Node3D" parent="."]
+script = ExtResource("2_rvslj")
+building_scene = ExtResource("3_0bbpv")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="BuildButton" type="Button" parent="HUD"]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "build
+"
+script = SubResource("GDScript_0bbpv")
