@@ -18,6 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 Gridmap="*res://scripts/GridMap.gd"
+ResourceManager="*res://scripts/ResourceManager.gd"
+DebugResource="*res://scripts/Debug/DebugResource.gd"
 
 [input]
 

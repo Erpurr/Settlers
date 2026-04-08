@@ -1,6 +1,6 @@
 extends Node
 
-signal resource_changed(resource_type: String, new_amount: int)
+signal resources_changed(resource_type: String, new_amount: int)
 signal resource_empty(resource_type: String)
 
 var resources = {
@@ -25,7 +25,7 @@ func spend(type: String, amount: int) -> bool:
 	if not has_enough(type, amount):
 		return false
 		print("Unknown resource type: " + type)
-	resources[type] += amount
+	resources[type] -= amount
 	emit_signal("resources_changed", type, resources[type])
 	if resources[type] <= 0:
 		emit_signal("resources_empty", type)

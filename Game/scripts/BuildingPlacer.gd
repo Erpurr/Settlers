@@ -14,10 +14,9 @@ func _on_build_button_pressed() -> void:
 	print(1)
 	start_placement()
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+	
 func _process(_delta: float) -> void:
 	if _is_placing:
 		_update_ghost()
@@ -51,7 +50,6 @@ func cancel_placement() -> void:
 
 func _update_ghost() -> void:
 	var ground_pos := _raycast_to_ground()
-	print("ground_pos: ", ground_pos)
 	if ground_pos == Vector3.ZERO:
 		return
 	
@@ -76,7 +74,9 @@ func _try_place() -> void:
 	var building: Node3D = building_scene.instantiate()
 	get_tree().current_scene.add_child(building)
 	building.global_position = snapped
-	building.initialize(cell)
+	
+	if not building.initialize(cell):
+		print("Not enough resources.")
 	
 func _raycast_to_ground() -> Vector3:
 	var mouse_pos := get_viewport().get_mouse_position()

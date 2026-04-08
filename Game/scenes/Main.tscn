@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://cxs8vk71h5okf"]
+[gd_scene load_steps=9 format=3 uid="uid://cxs8vk71h5okf"]
 
 [ext_resource type="Script" uid="uid://uj6xf3xnwt6f" path="res://scripts/camera.gd" id="1_elqb8"]
 [ext_resource type="Script" uid="uid://c6dfxeql122p3" path="res://scripts/BuildingPlacer.gd" id="2_rvslj"]
 [ext_resource type="PackedScene" uid="uid://eedvdhb8ruco" path="res://scenes/buildings/house.tscn" id="3_0bbpv"]
+[ext_resource type="Script" uid="uid://dhml4t0wmfuxd" path="res://scripts/ui/HUD.gd" id="4_vcsgt"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_0bbpv"]
 
@@ -57,12 +58,28 @@ building_scene = ExtResource("3_0bbpv")
 camera = NodePath("../CameraRig/Elevation/Camera3D")
 
 [node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("4_vcsgt")
 
 [node name="BuildButton" type="Button" parent="HUD"]
-offset_right = 8.0
-offset_bottom = 8.0
+offset_right = 54.0
+offset_bottom = 35.0
 text = "build
 "
 script = SubResource("GDScript_0bbpv")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD"]
+offset_left = 61.0
+offset_top = 2.0
+offset_right = 101.0
+offset_bottom = 42.0
+
+[node name="WoodLabel" type="Label" parent="HUD/HBoxContainer"]
+layout_mode = 2
+
+[node name="StoneLabel" type="Label" parent="HUD/HBoxContainer"]
+layout_mode = 2
+
+[node name="FoodLabel" type="Label" parent="HUD/HBoxContainer"]
+layout_mode = 2
 
 [connection signal="pressed" from="HUD/BuildButton" to="BuildingPlacer" method="_on_build_button_pressed"]
