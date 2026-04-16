@@ -1,18 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://cxs8vk71h5okf"]
+[gd_scene load_steps=12 format=3 uid="uid://cxs8vk71h5okf"]
 
 [ext_resource type="Script" uid="uid://uj6xf3xnwt6f" path="res://scripts/camera.gd" id="1_elqb8"]
+[ext_resource type="Script" uid="uid://booeu6x5j1dsa" path="res://scripts/main.gd" id="1_vcsgt"]
+[ext_resource type="PackedScene" uid="uid://wis02p1a8p16" path="res://scenes/worker.tscn" id="2_c01mt"]
 [ext_resource type="Script" uid="uid://c6dfxeql122p3" path="res://scripts/BuildingPlacer.gd" id="2_rvslj"]
 [ext_resource type="PackedScene" uid="uid://eedvdhb8ruco" path="res://scenes/buildings/house.tscn" id="3_0bbpv"]
 [ext_resource type="Script" uid="uid://dhml4t0wmfuxd" path="res://scripts/ui/HUD.gd" id="4_vcsgt"]
-
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_0bbpv"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0bbpv"]
-albedo_color = Color(0, 0, 0, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
-material = SubResource("StandardMaterial3D_0bbpv")
-size = Vector3(40, 2, 40)
 
 [sub_resource type="GDScript" id="GDScript_0bbpv"]
 script/source = "extends Button
@@ -28,16 +21,23 @@ func _process(delta: float) -> void:
 	pass
 "
 
-[node name="Main" type="Node"]
+[sub_resource type="NavigationMesh" id="NavigationMesh_rarhs"]
+vertices = PackedVector3Array(-19.5, 0.5, -19.5, -19.5, 0.5, 19.5, 19.5, 0.5, 19.5, 19.5, 0.5, -19.5)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 
-[node name="Ground" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_0bbpv"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
-shape = SubResource("WorldBoundaryShape3D_0bbpv")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0bbpv"]
+albedo_color = Color(0, 0, 0, 1)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
-mesh = SubResource("BoxMesh_ig7tw")
+[sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
+material = SubResource("StandardMaterial3D_0bbpv")
+size = Vector3(40, 2, 40)
+
+[node name="Main" type="Node3D" node_paths=PackedStringArray("camera")]
+script = ExtResource("1_vcsgt")
+worker_scene = ExtResource("2_c01mt")
+camera = NodePath("CameraRig/Elevation/Camera3D")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.991241, -0.132066, -1.35019e-07, 0.083741, -0.628529, 0.773265, -0.102122, 0.766492, 0.634083, 6.78881, 9.74541, 22.8176)
@@ -51,6 +51,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18.2848, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig/Elevation"]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 5, 10)
+current = true
 
 [node name="BuildingPlacer" type="Node3D" parent="." node_paths=PackedStringArray("camera")]
 script = ExtResource("2_rvslj")
@@ -81,5 +82,17 @@ layout_mode = 2
 
 [node name="FoodLabel" type="Label" parent="HUD/HBoxContainer"]
 layout_mode = 2
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_rarhs")
+
+[node name="Ground" type="StaticBody3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Ground"]
+shape = SubResource("WorldBoundaryShape3D_0bbpv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Ground"]
+mesh = SubResource("BoxMesh_ig7tw")
 
 [connection signal="pressed" from="HUD/BuildButton" to="BuildingPlacer" method="_on_build_button_pressed"]

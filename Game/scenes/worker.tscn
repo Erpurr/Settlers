@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://wis02p1a8p16"]
+
+[ext_resource type="Script" uid="uid://irfk24atbs5r" path="res://scripts/worker.gd" id="1_mj6w4"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ddj3k"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mj6w4"]
+height = 1.99713
+
+[node name="Worker" type="CharacterBody3D"]
+script = ExtResource("1_mj6w4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_ddj3k")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_mj6w4")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+avoidance_enabled = true
